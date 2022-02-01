@@ -2,7 +2,7 @@
   <div>
     <h1>Add New Item</h1>
     <div class="newItem">
-      <form id="submitNewItem" class="submit_iem" action="/">
+      <form id="submitNewItem" class="submit_item">
         <label><b>Product ID</b></label>
         <input
           type="number"
@@ -34,7 +34,7 @@
         <input
           type="number"
           min="0.00"
-          max="100.00"
+          max="1000.00"
           step="0.01"
           id="productPrice"
           placeholder="Price"
@@ -64,22 +64,44 @@ export default {
   data() {
     return {
       items: [{}],
-      //   idProduct: "",
-      //   productName: "",
-      //   productQuantity: "",
-      //   productPrice: "",
-      //   productDescription: "",
+      idProduct: "",
+      productName: "",
+      productQuantity: "",
+      productPrice: "",
+      productDescription: "",
     };
   },
   methods: {
+    // refreshData() {
+    //   axios
+    //     .get(`http://localhost:5000/stock/`)
+    //     .then((response) => {
+    //       this.items = response.data;
+    //     })
+    //     .catch((error) => {
+    //       if (error.response) {
+    //         console.log(error.response.status);
+    //       } else if (error.request) {
+    //         console.log(error.request);
+    //       } else {
+    //         console.log(error.message);
+    //       }
+    //     });
+    // },
     addItem() {
       axios
         .post(`http://localhost:5000/stock/add/`, {
-          id: this.idProduct,
+          idProduct: this.idProduct,
           productName: this.productName,
           productQuantity: this.productQuantity,
           productPrice: this.productPrice,
           productDescription: this.productDescription,
+        })
+        .then((response) => {
+          console.log(response);
+          this.refreshData();
+          // alert("success");
+          alert(response.data.id);
         })
         .catch((error) => {
           if (error.response) {
@@ -90,10 +112,9 @@ export default {
             console.log(error.message);
           }
         });
-      this.newStock();
     },
-    newStock() {
-      this.$emit("new");
+    mounted: function () {
+      this.refreshData();
     },
   },
 };
